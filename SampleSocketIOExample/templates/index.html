@@ -1,0 +1,42 @@
+<!DOCTYPE html>   
+<html>   
+<head>  
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script> 
+<title> Login Page </title>  
+</head>    
+<body>    
+    <center> <h1> Student Login Form </h1> </center>   
+    <form>    
+            <label>Username : </label>   
+            <input type="text" placeholder="Enter Username" id="username" required>  
+            <label>Password : </label>   
+            <input type="password" placeholder="Enter Password" id="password" required>  
+            <button type="submit" onclick="login_function()">Login</button>   
+    </form>     
+</body>  
+<script>
+var socket = io.connect('http://'+document.domain+':'+location.port);
+socket.on('connect', function() {
+	 console.log('connected');
+	 });
+
+socket.on('logged_in', function(data) {
+				 window.location.href = '/session';
+				 
+				 });
+				 
+function login_function(){
+
+ var pwd = document.getElementById('password').value;
+
+ var uname = document.getElementById('username').value; 
+
+ if(pwd.length > 0 && uname.length > 0){
+	
+    socket.emit("join",{'password':pwd,"username":uname});
+ }
+}			
+				 
+</script>   
+</html>  

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Q Point</title>
+	<!--<link rel="stylesheet" type="text/css" href="style.css">-->
+	<!-- Latest compiled and minified CSS -->
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
+<link rel="stylesheet"  href="{{ url_for('static', filename='files/bootstrap.min.css')}}">
+
+<!-- jQuery library -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+<script src="{{ url_for('static', filename='files/jquery.min.js')}}"></script>
+
+<!-- Popper JS -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>-->
+<script src="{{ url_for('static', filename='files/popper.min.js')}}"></script>
+
+
+<!-- Latest compiled JavaScript -->
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+<script src="{{ url_for('static', filename='files/bootstrap.min.js')}}"></script>
+
+
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+ <!--<link rel="stylesheet"  href="{{ url_for('static', filename='files/font-awesome.min.css')}}">-->
+ <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome/css/all.css')}}"> <!--load all styles -->
+ <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome/css/brand.css')}}"> <!--load all styles -->
+ <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome/css/solid.css')}}"> <!--load all styles -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+ <!-- Script for socketio -->
+	<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>-->
+	
+<script src="{{ url_for('static', filename='files/socket.io.min.js')}}"></script>
+
+
+
+</head>
+<body>
+
+
+<!--header-->
+<div class="container-fluid">
+	<nav class="navbar navbar-expand-sm bg-light navbar-light fixed-top">
+    
+     		<a href="#" class="navbar-brand text-warning font-weight-bold">
+					<img src="/static/logo.jpg">
+				
+			</a>
+			<button class="navbar-toggler bg-light" type="button" data-toggle="collapse" data-target="#collapsenavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse text-center" id="collapsenavbar">
+     			<ul class="navbar-nav ml-auto">
+     			<!-- <li class="nav-item m-1" ><button type="button"  onclick="location.href='/alljobs';" class="btn btn-light"><i class=" fa-2x" aria-hidden="true"></i><br>Home</button></li>	
+				<li class="nav-item m-1" ><button type="button" onclick="location.href='/stationdata';" class="btn btn-light"><i class=" fa-2x" aria-hidden="true"></i><br>Stations</button></li>
+     			<li class="nav-item m-1"id="log_out" ><button type="button" onclick="log_out()" class="btn btn-light"><i class=" fa-2x" aria-hidden="true"></i><br>Log Out</button></li>
+				 -->
+				<li class="nav-item m-1" ><button type="button"  onclick="location.href='/alljobs';" class="btn btn-light"><i class="fa fa-home fa-2x" aria-hidden="true"></i><br>Home</button></li>	
+				<li class="nav-item m-1" ><button type="button" onclick="location.href='/stationdata';" class="btn btn-light"><i class="fa fa-plug fa-2x" aria-hidden="true"></i><br>Stations</button></li>
+     			<li class="nav-item m-1" id="log_out" ><button type="button" onclick="log_out()" class="btn btn-light"><i class="fa fa-lock fa-2x" aria-hidden="true"></i><br>Log Out</button></li>
+				
+				</ul>
+     		</div>
+	</nav>
+	</div>
+
+ <!--header-->
+
+
+<div class="container m-5">
+header</br>
+header</br>
+
+</div>
+
+
+
+
+<!--container-->
+    <div class="container">
+		<form class="m-2" onsubmit='return false'>
+			<label id="username">Welcome !</label>
+			<div class="form-row align-items-center">
+			
+			<div class="col-auto">
+			  <label class="sr-only" for="inlineFormInputGroup">Username</label>
+			  <div class="input-group mb-2">
+				<div class="input-group-prepend">
+				  <div class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></div>
+				</div>
+				<input type="text" class="form-control" id="query_jobnumber" placeholder="Job number">
+			  </div>
+			</div><!--col auto-->
+			<div class="col-auto">
+				<select class="custom-select mb-2" id="query_jobtype" placeholder="Jobtype">
+					<option value="0">Job Type</option>
+			  </select>
+			</div><!--col auto-->	 
+			<div class="col-auto">
+				<select class="custom-select mb-2" id="query_jobstatus">
+					<option value="0">Job Status</option>
+					<option value="Not Started">Not Started</option>
+					<option value="WIP">WIP</option>
+					<option value="Complete">Complete</option>
+			  </select>
+			</div><!--col auto-->	 	
+			
+			<div class="col-auto">
+			  <button  onclick="specific_query()" class="btn btn-warning mb-2">Search</button>
+			</div><!--col auto-->
+			
+		</form>
+			
+		<div class="col-auto">
+		  <button type="button" class="btn btn-warning mb-2" data-toggle="modal" data-target="#newjob_modal" >New Job</button>
+		</div><!--col auto-->
+		
+		<div class="col-auto">
+		  <button type="button" class="btn btn-warning mb-2" onclick="refresh()" >Refresh</button>
+		</div><!--col auto-->
+		
+	</div><!--form row-->
+	
+	<div class="col-auto">
+	 <div class="row mb-2">
+	 <div class="col-2"><label >Console Message: </label></div>
+	  <div class="col-10"><textarea class="form-control" id="console_status" rows="1"></textarea></div>
+	 
+	</div>
+		
+	
+</div>
+<!--container-->
+
+<!--container-->    
+<div class="container" style = "overflow-x: scroll;">
+
+		<div class="table-responsive-sm mr-10">
+				<table class="table table-bordered table table-striped table table-hover">
+						<thead >
+								<tr>
+								
+								<th class="bg-warning">Product Line</th>
+								<th class="bg-warning">Job Number</th>
+								<th class="bg-warning">Batch Number</th>
+								<th class="bg-warning">Sequence Number</th>
+								<th class="bg-warning">Station Number</th>
+								<th class="bg-warning">Target Qty</th>
+								<th class="bg-warning">Done Qty</th>
+								<th class="bg-warning">Job Type</th>
+								<th class="bg-warning">Job Status</th>
+								<th class="bg-warning">Start Date</th>
+								<th class="bg-warning">Due date</th>
+								<!--<th class="bg-warning">PDF Report</th>-->
+								<th class="bg-warning">Manager Incharge</th>
+								<th class="bg-warning">Test Incharge</th>
+								<th class="bg-warning">User Actions</th>
+                               </tr>
+                            </thead>
+                            <tbody id="tablebody">
+                               
+                            </tbody>
+						</table>			
+		</div> <!--table responsive -->
+</div>
+<!--container--> 
+<script type="text/javascript">
+
+var socket = io.connect('http://'+document.domain+':'+location.port);
+
+socket.on('connect', function() {
+	 console.log('connected');
+	 socket.emit('all_jobs_page','Connected')
+});
+socket.on('message', function(data) {
+	 console.log(data);
+
+});
+socket.on('redirect', function(data) {
+window.location.href = '/';
+});
+
+socket.on('userinfo', function(data) {
+document.getElementById("username").innerHTML = "Welcome, "+data["username"]+" ! (" +data["role"] + ")";
+document.getElementById("testengineer_check").value = data["username"];
+});
+
+socket.on('console_status', function(data) {
+console.log(data);
+document.getElementById("console_status").innerHTML = data;
+});
+
+socket.on('turn_to_localhost', function(data) {
+console.log(data);
+
+window.location.href = "http://127.0.0.1:5000/"+data;
+
+
+});
+
+
+socket.on('station_check', function(data) {
+console.log(data);
+document.getElementById("station_check").value = data;
+if(data == "OK"){
+document.getElementById("starttest_button").disabled = false;
+}
+});
+
+
+
+
+socket.on('all_job_data', function(data) {
+
+console.log("All jobs data received !")
+var keys =  ['productline', 'jobnumber', 'batchnumber', 'sequencenumber' , 'stationnumber', 'target_quantity', 'done_quantity', 'jobtype','status'
+,'start_date', 'due_date','manager_incharge','test_incharge',];
+inner_html="";
+for(var j=0; j< data.length;j++){
+
+	inner_html += '<tr>';
+	var counter = 0;        
+	for(var key=0 ; key < keys.length; key++){
+		var k = keys[key];
+		if (k == "report_link"){
+			inner_html += '<td><a href ='+String(data[j][k])+'> View </a></td>';
+			
+		}
+		else {
+		inner_html += '<td>'+String(data[j][k])+'</td>';    
+		}
+	}				
+	<!--inner_html += '<td><label onclick="redo()">Redo</label> &nbsp; &nbsp; <label  onclick="delete()"> Delete </label> </td>'; -->
+	inner_html += '<td><div id ="'+ data[j]["jobnumber"]+'" class="btn-group"> ';
+    inner_html += '<button type="button" class="btn btn-sm btn-primary" onclick="redo(this)" > Redo </button> '; 
+    inner_html += '<button type="button" class="btn btn-sm btn-danger" onclick="delete_row(this)"> Delete </button>';
+    inner_html += '<button type="button" class="btn btn-sm btn-success" onclick="starttest(this)"> Start </button>';
+	inner_html += '</div>' ;
+	inner_html += '</tr>'; 
+
+}
+//alert(inner_html);
+document.getElementById("tablebody").innerHTML = inner_html;
+
+});
+
+
+function log_out(){
+
+socket.emit("logout","OK");
+
+}
+
+
+
+function redo(element){
+ var jobnumber = ($(element).closest("div").attr("id"));
+//alert(jobnumber);
+document.getElementById("redo_modal_body").innerHTML = jobnumber ;
+$("#redo_modal").modal() 
+ }
+
+function delete_row(element){
+ var jobnumber = ($(element).closest("div").attr("id"));
+//alert(jobnumber);
+document.getElementById("delete_modal_body").innerHTML = jobnumber ;
+$("#delete_modal").modal() 
+
+}
+
+function starttest(element){
+ var jobnumber = ($(element).closest("div").attr("id"));
+//alert(jobnumber);
+document.getElementById("starttest_modal_body").innerHTML = jobnumber ;
+document.getElementById("starttest_button").disabled = true;
+$("#starttest_modal").modal() 
+
+
+socket.emit("station_check",{'jobnumber':jobnumber});
+
+
+
+}
+
+
+function redo_send(){
+
+var jobnumber = document.getElementById("redo_modal_body").innerHTML;
+socket.emit("user_action",{'jobnumber':jobnumber,"action":"redo"});
+
+}
+function delete_send(){
+
+var jobnumber = document.getElementById("delete_modal_body").innerHTML;
+socket.emit("user_action",{'jobnumber':jobnumber,"action":"delete"});
+
+}
+
+
+
+
+function create_job(){
+
+var id_keys =  ['productline', 'jobnumber', 'batchnumber', 'sequencenumber' , 'stationnumber', 'target_quantity', 'jobtype',
+'start_date', 'due_date','manager_incharge','test_incharge'];
+
+to_send = {};
+
+for(var i=0; i <id_keys.length; i++){
+
+to_send[id_keys[i]] = document.getElementById(id_keys[i]).value ;
+
+}
+socket.emit("create_job",to_send);
+
+}
+
+
+function specific_query(){
+
+to_send= {
+"jobnumber" : document.getElementById("query_jobnumber").value ,
+"jobstatus" : document.getElementById("query_jobstatus").value ,
+"jobtype"   : document.getElementById("query_jobtype").value 
+}
+socket.emit("query_job",to_send);
+}
+
+function refresh(){
+console.log("Refresh page");
+window.location.href = "/alljobs/";
+}
+
+
+
+</script>
+
+ <!-- redo mymodal-->
+  <div class="modal fade" id="redo_modal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> Redo Confirmation </h4>
+        </div>
+		
+        <div class="modal-body" > 
+			<div class="row">
+			<label> Job Number : </label>
+			<label id = "redo_modal_body" ></label> 
+			</div>
+			</br>
+	
+        </div>
+        <div class="modal-footer">
+		  <button  class="btn btn-warning" onclick="redo_send()"  data-dismiss="modal"> Submit</button>		
+          <button type="button" class="btn btn-danger" data-dismiss="modal"> Cancel </button>
+        </div>
+      </div>
+      
+    </div>
+  </div><!-- redo modal-->	
+
+ <!-- delete mymodal-->
+  <div class="modal fade" id="delete_modal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Confirmation </h4>
+        </div>
+		
+        <div class="modal-body" > 
+			<div class="row">
+			<label> Job Number : </label>
+			<label id = "delete_modal_body" ></label> 
+			</div>
+			</br>
+	
+        </div>
+        <div class="modal-footer">
+		  <button  class="btn btn-warning" onclick="delete_send()"  data-dismiss="modal"> Submit</button>		
+          <button type="button" class="btn btn-danger" data-dismiss="modal"> Cancel </button>
+        </div>
+      </div>
+      
+    </div>
+  </div><!-- delete modal-->
+
+<!-- starttest mymodal-->
+  <div class="modal fade" id="starttest_modal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Start Test Confirmation </h4>
+        </div>
+		
+        <div class="modal-body" > 
+			<div class="row">
+				<div class="col-6"><label > Job Number : </label></div>
+				<div class="col-6"><label  id = "starttest_modal_body" ></label> </div>
+			</div>
+			
+			<div class="row form-group pt-2">				
+				<div class="col-6"><label for="Checking Station">Station Check</label></div>
+				<div class="col-6"><textarea  class="form-control" id=station_check placeholder="" value="" readonly></textarea></div>					   
+			</div>
+			
+			
+			<div class="row form-group">				
+				<div class="col-6"><label for="Checking Station">Test Engineer</label></div>
+				<div class="col-6"><input type="text" class="form-control" id=testengineer_check placeholder="" value="" readonly></div>					   
+			</div>
+			
+			
+			
+        </div>
+        <div class="modal-footer">
+		  <button  class="btn btn-warning" id="starttest_button"onclick="starttest_send()"  data-dismiss="modal"> Submit</button>		
+          <button type="button" class="btn btn-danger" data-dismiss="modal"> Cancel </button>
+        </div>
+      </div>
+      
+    </div>
+  </div><!-- starttest modal-->  
+
+  
+<!-- new job modal -->
+<div class="modal fade" id="newjob_modal" role="dialog">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">New Job</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body" id="newjob_body" >
+		
+			<form onsubmit='return false'>
+				<div class="row form-group">				
+				<div class="col-6"><label for="productline">Product Line</label></div>
+				<div class="col-6"><input type="text" class="form-control-sm" id=productline placeholder="" value="IFA"></div>					   
+				</div>
+
+				<div class="row form-group">					   
+				<div class="col-6"><label for="jobnumber">Job Number</label></div>					   
+				<div class="col-6"><input type="text" class="form-control-sm" id=jobnumber placeholder=""></div>				   
+				</div>
+
+				<div class="row form-group">					   
+				<div class="col-6"><label for="batchnumber">Batch Number</label></div>					   
+				<div class="col-6"><input type="text" class="form-control-sm" id=batchnumber placeholder="">	</div>				   
+				</div>
+
+				<div class="row form-group">					   
+				<div class="col-6"><label for="sequencenumber">Sequence Number</label>	</div>				   
+				<div class="col-6"><input type="text" class="form-control-sm" id=sequencenumber placeholder="">		</div>			  
+				 </div>
+
+				 <div class="row form-group">					   
+					<div class="col-6"><label for="stationnumber">Station Number</label></div>
+					<div class="col-6">
+					<select class="form-control-sm" id="stationnumber">
+					</select></div>
+				 </div> 
+
+				 <div class=" row form-group">					   
+				 <div class="col-6"><label for="target_quantity">Target Quantity</label></div>					  
+				 <div class="col-6"><input type="text" class="form-control-sm" id=target_quantity placeholder="">	</div>				  
+				 </div>
+
+				 <div class=" row form-group">					   
+				 <div class="col-6"><label for="jobtype">Job Type</label></div>				   
+				 <div class="col-6">
+					<select class="form-control-sm" id=jobtype>
+					</select></div>
+				 </div>
+
+				 <div class="row form-group">					   
+				 <div class="col-6"><label for="start_date">Start Date</label>	</div>				   
+				 <div class="col-6"><input type="text" class="form-control-sm" id=start_date placeholder="">
+					<script>
+					var today = new Date();
+					var date =today.getDate()+"/"+ (today.getMonth()+1) +"/"+ today.getFullYear();
+					document.getElementById("start_date").value = date;
+					</script>
+				 </div>				  
+				 </div>
+
+				 <div class="row form-group">					   
+				 <div class="col-6"><label for="due_date">Due Date</label>	</div>				   
+				 <div class="col-6"><input type="text" class="form-control-sm" id=due_date placeholder="">
+					<script>
+					
+					var today = new Date()
+					var tomorrow = new Date(today)
+					tomorrow.setDate(tomorrow.getDate() + 1)
+					var date =tomorrow.getDate()+"/"+ (tomorrow.getMonth()+1) +"/"+ tomorrow.getFullYear();
+					document.getElementById("due_date").value = date;
+					
+					</script>
+				 
+				 </div>				   
+				 </div>
+
+				 <div class="row form-group">					   
+				 <div class="col-6"><label for="manager_incharge">Manager Incharge</label>		</div>			  
+				 <div class="col-6">
+				 	<select class="form-control-sm" id=manager_incharge>
+					  <option>Manager</option>
+					  	</select></div>
+
+				 </div>				   
+				 
+
+				 <div class="row form-group">					  
+				 <div class="col-6"><label for="test_incharge">Test Incharge</label>	</div>				   
+				 <div class="col-6">
+				 	<select class="form-control-sm" id=test_incharge>
+					  <option>Test_Engineer1</option>
+					  <option>Test_Engineer2</option>
+					  	</select></div>
+
+				 </div>			  
+				 
+			 </form>
+
+
+
+
+		
+			<script>
+		var id_keys =  ['productline', 'jobnumber', 'batchnumber', 'sequencenumber' , 'stationnumber', 'target_quantity', 'jobtype',
+		'start_date', 'due_date','manager_incharge','test_incharge'];
+		var label_keys = ['Product Line', 'Job Number', 'Batch Number', 'Sequence Number' , 'Station Number', 'Target Quantity', 'Job type',
+		'Start Date', 'Due Date','Manager Incharge','Test Incharge'];
+		
+		
+		/*inner_html = "<form onsubmit='return false'>";
+		for(var i =0;i < id_keys.length ; i++){
+		inner_html += '<div class="form-group">\
+					   <label for="'+ id_keys[i] +'">'+ label_keys[i] +'</label>\
+					   <input type="text" class="form-control" id='+ id_keys[i] +' placeholder="">\
+					   </div>';
+		}
+		inner_html += '</form>';
+		console.log(inner_html);
+		document.getElementById("newjob_body").innerHTML = inner_html ;*/
+		</script>
+		
+			
+			
+			<form>
+			  
+			   
+			</form>
+		
+			</div><!--modal body -->
+		<div class="modal-footer">
+		  <button  class="btn btn-warning" onclick="create_job()"  data-dismiss="modal"> Create Job</button>		
+          <button type="button" class="btn btn-danger" data-dismiss="modal"> Cancel </button>
+        </div>
+		
+		</div><!--modal content -->
+	</div><!--modal dialog -->
+</div><!--new job modal-->
+
+<script>  
+
+   socket.on('current_station_data', function(data) {
+
+	var stnno = document.getElementById("stationnumber");
+
+	var stations = [...new Set(data)].sort();
+
+   for(var j = 0; j < stations.length; j++) {
+       var opt = stations[j];
+       var el = document.createElement("option");
+       el.textContent = opt;
+       el.value = opt;
+       stnno.appendChild(el);
+   }
+				 
+});	
+
+
+socket.on('all_jobtypes', function(data) {
+
+   var jtype = document.getElementById("jobtype");
+
+   for(var j = 0; j < data.length; j++) {
+       var opt = data[j];
+       var el = document.createElement("option");
+       el.textContent = opt;
+       el.value = opt;
+       jtype.appendChild(el);
+   }
+	
+   var queryjobtype = document.getElementById("query_jobtype");
+
+   for(var j = 1; j < data.length; j++) {
+       var opt = data[j];
+       var el = document.createElement("option");
+       el.textContent = opt;
+       el.value = opt;
+       queryjobtype.appendChild(el);
+   }
+					 
+});	
+   
+</script>
+
+</body>
+</html>

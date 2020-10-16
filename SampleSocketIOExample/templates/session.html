@@ -1,0 +1,33 @@
+<!DOCTYPE html>   
+<html>   
+<head>  
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script> 
+<script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+
+<title> Session details Page </title>  
+</head>    
+<body>   
+ 
+    <center> <h1> Session profile </h1> </center>   
+    <form> 
+  
+		<label id="session_details"></label> 
+
+            <button type="submit">Logout</button>   
+    </form>   
+<script>
+
+var socket = io.connect('http://'+document.domain+':'+location.port);
+	 
+socket.on('login_details', function(data) {
+				window.alert(data);
+				 document.getElementById('session_details').innerHTML = data;
+				 
+				 });
+
+</script> 
+
+</body>  
+  
+</html>  

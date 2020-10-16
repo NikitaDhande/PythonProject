@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Q Point</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
+	<!-- Latest compiled and minified CSS -->
+	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+	<link rel="stylesheet"  href="{{ url_for('static', filename='files/bootstrap.min.css')}}">
+<!-- jQuery library -->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+
+<script src="{{ url_for('static', filename='files/jquery.min.js')}}"></script>
+<!-- Popper JS -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js">-->
+<script src="{{ url_for('static', filename='files/popper.min.js')}}"></script>
+
+
+<!-- Latest compiled JavaScript -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+<script src="{{ url_for('static', filename='files/bootstrap.min.js')}}"></script>
+
+
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+<link rel="stylesheet"  href="{{ url_for('static', filename='files/font-awesome.min.css')}}">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Script for socketio -->
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>-->
+<script src="{{ url_for('static', filename='files/socket.io.min.js')}}"></script>
+
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>-->
+
+
+
+
+</head>
+<body>
+<!--header-->
+     <nav class="navbar navbar-expand-sm bg-light navbar-light fixed-top">
+     	<div class="container-fluid">
+
+     		<a href="#" class="navbar-brand text-warning font-weight-bold">
+					<img src="/static/logo.jpg">
+				
+			</a>
+			<button class="navbar-toggler bg-light" type="button" data-toggle="collapse" data-target="#collapsenavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse text-center" id="collapsenavbar">
+     			
+     		</div>
+		</div>
+     </nav>
+ <!--header-->
+
+
+
+<!-- login form -->
+<div class="wrapper">
+	
+	<div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+       <!--<div class="card card-signin my-5">-->
+          <div class="card-body">
+            <h5 class="card-title text-center"> Q Point </h5>
+            <form class="form-signin" onsubmit="return false" >
+              <div class="form-label-group">
+				<label for="inputEmail">Username</label>
+                <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+              </div>
+
+              <div class="form-label-group">
+                <label for="inputPassword">Password</label>
+				<input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+              </div>
+			   <button class="btn  btn-warning btn-block m-2 " onclick="login_function()" >Sign in</button>
+			   
+			   <label id='login_cred' > Please Sign in to continue. </label>
+				</form>
+             
+            
+          </div>
+        <!--</div>-->
+      </div>
+    </div>
+	
+<!-- login form -->
+
+</body>
+<script>
+var socket = io.connect('http://'+document.domain+':'+location.port);
+socket.on('connect', function() {
+	 console.log('connected');
+		//socket.emit('serverside','login_page');
+	 socket.emit('login_page','Loaded');
+	 });
+	 
+	 socket.on('data', function(data) {
+				 console.log(data);
+				 });
+				 
+	 socket.on('login_cred', function(data) {
+				 document.getElementById('login_cred').innerHTML  = data ;
+				 
+				 });
+	  socket.on('load_all_jobs', function(data) {
+				 window.location.href = '/alljobs';
+				 
+				 });
+				 
+				 
+function login_function(){
+
+ var pwd = document.getElementById('inputPassword').value;
+
+ var uname = document.getElementById('inputUsername').value; 
+
+ if(pwd.length > 0 && uname.length > 0){
+	
+    socket.emit("join",{'password':pwd,"username":uname});
+ }
+}			
+				 
+</script>
+</html>
